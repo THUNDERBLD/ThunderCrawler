@@ -1,4 +1,3 @@
-// lib/constants.ts
 export const APP_NAME = "ThunderCrawler"
 export const APP_DESCRIPTION = "Smart job application automation platform"
 

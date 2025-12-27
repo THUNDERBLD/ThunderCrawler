@@ -3,7 +3,7 @@
 
 export const siteConfig = {
   name: "ThunderCrawler",
-  description: "ThunderCrawler job listings, customize resumes, automate applications with AI",
+  description: "Lightning-fast job aggregation with AI-powered automation. Scrape jobs, customize resumes, apply intelligently.",
   url: "https://thundercrawler.app",
   ogImage: "https://thundercrawler.app/og.png",
   links: {
@@ -24,5 +24,38 @@ export const navItems = [
   {
     title: "Pricing",
     href: "/pricing",
+  },
+]
+
+export const dashboardNav = [
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: "dashboard",
+  },
+  {
+    title: "Jobs",
+    href: "/jobs",
+    icon: "briefcase",
+  },
+  {
+    title: "Applications",
+    href: "/applications",
+    icon: "fileText",
+  },
+  {
+    title: "Resume",
+    href: "/resume",
+    icon: "file",
+  },
+  {
+    title: "Analytics",
+    href: "/analytics",
+    icon: "barChart",
+  },
+  {
+    title: "Settings",
+    href: "/settings",
+    icon: "settings",
   },
 ]
