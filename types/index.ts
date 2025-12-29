@@ -12,6 +12,7 @@ export type JobWithApplications = Job & {
   }
 }
 
+
 export type ApplicationWithJobAndUser = Application & {
   job: Job
   user: User
