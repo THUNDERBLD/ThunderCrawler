@@ -1,0 +1,162 @@
+// This is your Prisma schema file, which defines your database models and configuration.
+// Prisma will generate a database client  // Prisma Client is not the database and It’s just a typed API layer(ORM) on top of Postgres
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+// Datasource block (Database connection)  // Your DB is PostgreSQL
+datasource db {
+  provider = "postgresql"
+}
+
+// User accounts  // Each model = one SQL table
+model User {
+  id            String    @id @default(cuid())      // Primary Key  // @id → primary key  // cuid() → unique string ID (safe for distributed systems)
+  email         String    @unique                  // String → NOT NULL     // @unique → unique index in Postgres
+  name          String?                           // String? → NULLABLE    // ? makes field optional
+  password      String // Hashed with bcrypt     // Prisma does not hash passwords  // This is your responsibility in backend code.
+  image         String?
+  emailVerified DateTime?                       // For email verification
+  createdAt     DateTime  @default(now())      // @default(now()) → auto insert timestamp when created
+  updatedAt     DateTime  @updatedAt          //  @updatedAt → Prisma auto-updates on every update
+
+  // Relations    // This does NOT create columns. Just for relations between tables.   
+  // This tells Prisma: A user can have many applications, saved jobs, and resumes.
+  applications Application[]
+  savedJobs    SavedJob[]
+  resumes      Resume[]
+  accounts     Account[]      
+  sessions     Session[]      
+
+  // Table name override 
+  // Without this: table name would be "User" (Prisma uses model name as table name by default)
+  // With this: table name is "users"
+  @@map("users")
+}
+
+
+// Job listings (scraped from various sources)
+model Job {
+  id          String    @id @default(cuid())
+  title       String
+  company     String
+  location    String?
+  salary      String?
+  description String    @db.Text        // @db.Text → for long text fields( POSTGRESQL TEXT type )  // Use when data is long (job descriptions)
+  url         String    @unique
+  source      String                   // 'yc', 'wellfound', etc.
+  postedAt    DateTime?
+  scrapedAt   DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Structured data (optional)
+  jobType    String? // 'full-time', 'contract', etc.
+  experience String? // 'junior', 'mid', 'senior'
+  remote     Boolean  @default(false)
+  skills     String[] // Array of required skills
+
+  // Relations
+  applications Application[]
+  savedJobs    SavedJob[]
+
+  // Indexes (performance)   // why? -> To speed up queries on these fields and You’ll filter jobs by source, company, recent scrapes
+  @@index([source])         // Basically, Index = faster reads
+  @@index([company])
+  @@index([scrapedAt])
+  @@map("jobs")
+}
+
+// User's job applications
+model Application {
+  id        String   @id @default(cuid())
+  userId    String
+  jobId     String
+  status    String          // 'saved', 'applied', 'interviewing', 'rejected', 'accepted'
+  appliedAt DateTime @default(now())
+  notes     String?  @db.Text
+  resumeId  String?       // Which resume version was used
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations     // user → relation field name (used in Prisma Client)  // User → User → target model   // Basically, This record belongs to ONE User.
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)     // fields: [userId] → foreign key column in this model, userId is the foreign key column and It lives in the current table (applications)
+  job    Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)      // onDelete: Cascade → if user/job is deleted, delete related applications, basically If the parent User is deleted, delete this record automatically.
+  resume Resume? @relation(fields: [resumeId], references: [id])                      // references: [id] → target model's primary key, userId points to User.id and id is the primary key of users
+
+  @@unique([userId, jobId])    // User can only apply once per job
+  @@index([userId])
+  @@index([status])
+  @@map("applications")
+}
+
+// User's saved jobs (bookmarks)
+model SavedJob {
+  id        String   @id @default(cuid())
+  userId    String
+  jobId     String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job  Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+  @@map("saved_jobs")
+}
+
+// User's resumes (base + customized versions)
+model Resume {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  content   String   @db.Text // LaTeX or JSON format
+  isBase    Boolean  @default(false) // Is this the base resume?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([userId])
+  @@map("resumes")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
