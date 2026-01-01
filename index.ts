@@ -1,3 +1,5 @@
+// just ta file for sending test data to the database using prisma
+
 import { prisma } from './lib/prisma'
 
 async function main() {

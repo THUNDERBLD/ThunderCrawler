@@ -9,6 +9,25 @@ import bcrypt from "bcryptjs"
 export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(prisma) as any,
   session: { strategy: "jwt" },
+  
+  // 👇 FIX: Add these callbacks to expose the User ID
+  callbacks: {
+    async jwt({ token, user }) {
+      // 1. On login, add the user's ID to the token
+      if (user) {
+        token.sub = user.id
+      }
+      return token
+    },
+    async session({ session, token }) {
+      // 2. When asking for session, grab ID from token and put it in session
+      if (token.sub && session.user) {
+        session.user.id = token.sub
+      }
+      return session
+    }
+  },
+
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -18,7 +37,7 @@ export const authOptions: NextAuthConfig = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null // <--- Return null instead of throwing
+          return null 
         }
 
         const user = await prisma.user.findUnique({
@@ -26,7 +45,7 @@ export const authOptions: NextAuthConfig = {
         })
 
         if (!user || !user.password) {
-          return null // <--- Return null instead of throwing
+          return null 
         }
 
         const valid = await bcrypt.compare(
@@ -35,7 +54,7 @@ export const authOptions: NextAuthConfig = {
         )
 
         if (!valid) {
-          return null // <--- Return null instead of throwing
+          return null 
         }
 
         return {
@@ -47,7 +66,6 @@ export const authOptions: NextAuthConfig = {
       },
     }),
   ],
-  // ... callbacks
 }
 
 export const { auth, signIn, signOut, handlers } = NextAuth(authOptions)
