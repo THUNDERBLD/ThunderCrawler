@@ -1,7 +1,7 @@
 // app/(dashboard)/jobs/page.tsx
 import { getJobs } from "@/actions/job.actions"
-import { JobCard } from "@/components/dashboard/job-card"
 import { JobFilters } from "@/components/dashboard/job-filters"
+import { JobList } from "@/components/dashboard/job-list" // Import the new component
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
@@ -9,7 +9,6 @@ export const metadata = {
   title: "Jobs | ThunderCrawler",
 }
 
-// FIX 1: Update the interface to wrap the object in a Promise
 interface JobsPageProps {
   searchParams: Promise<{
     search?: string
@@ -19,16 +18,16 @@ interface JobsPageProps {
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
-  // FIX 2: Await the searchParams before accessing properties
   const resolvedParams = await searchParams;
 
   const filters = {
     search: resolvedParams.search,
     source: resolvedParams.source as any,
-    // Use resolvedParams here instead of searchParams
     remote: resolvedParams.remote === "true" ? true : resolvedParams.remote === "false" ? false : undefined,
+    page: 1, // Explicitly request page 1
   }
 
+  // Fetch the initial 10 jobs
   const result = await getJobs(filters)
 
   return (
@@ -46,7 +45,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
           <JobFilters />
         </div>
 
-        {/* Job List */}
+        {/* Job List Area */}
         <div className="lg:col-span-3 space-y-4">
           {!result.success ? (
             <Alert variant="destructive">
@@ -61,17 +60,17 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
             </Alert>
           ) : (
             <>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-4">
                 <p className="text-sm text-gray-500">
-                  {result.jobs?.length} jobs found
+                  Showing latest jobs
                 </p>
               </div>
 
-              <div className="space-y-4">
-                {result.jobs?.map((job) => (
-                  <JobCard key={job.id} job={job} />
-                ))}
-              </div>
+              {/* Pass the data and filters to the Client Component */}
+              <JobList 
+                initialJobs={result.jobs || []} 
+                filters={filters} 
+              />
             </>
           )}
         </div>

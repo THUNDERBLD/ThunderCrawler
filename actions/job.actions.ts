@@ -3,59 +3,30 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
-import { JobFilterInput } from "@/lib/validations"
 
 
 // Get all jobs with optional filters
-export async function getJobs(filters?: JobFilterInput) {
+export async function getJobs(filters: any) {
+  // Add these defaults or extract from filters
+  const page = filters.page || 1;
+  const limit = 10;
+  const skip = (page - 1) * limit;
+
   try {
-    const where: any = {}
-
-    // Apply filters
-    if (filters?.search) {
-      where.OR = [
-        { title: { contains: filters.search, mode: "insensitive" } },
-        { company: { contains: filters.search, mode: "insensitive" } },
-        { description: { contains: filters.search, mode: "insensitive" } },
-      ]
-    }
-
-    if (filters?.source) {
-      where.source = filters.source
-    }
-
-    if (filters?.remote !== undefined) {
-      where.remote = filters.remote
-    }
-
-    if (filters?.jobType) {
-      where.jobType = filters.jobType
-    }
-
-    if (filters?.experience) {
-      where.experience = filters.experience
-    }
-
-    if (filters?.skills && filters.skills.length > 0) {
-      where.skills = {
-        hasSome: filters.skills,
-      }
-    }
-
     const jobs = await prisma.job.findMany({
-      where,
-      orderBy: {
-        scrapedAt: "desc",
-      },
-      take: 50, // Limit to 50 jobs for now
-    })
-
-    return { success: true, jobs }
+      where: { /* your existing filters */ },
+      orderBy: { createdAt: 'desc' },
+      skip: skip, // <--- Add this
+      take: limit, // <--- Add this
+    });
+    
+    return { success: true, jobs };
   } catch (error) {
-    console.error("Error fetching jobs:", error)
-    return { success: false, error: "Failed to fetch jobs" }
+    console.error("Error fetching jobs:", error);
+    return { success: false, error: "Failed to fetch jobs" };
   }
 }
+
 
 // Get single job by ID
 export async function getJobById(id: string) {
@@ -104,8 +75,8 @@ export async function saveJob(jobId: string) {
     revalidatePath(`/jobs/${jobId}`)
 
     return { success: true, savedJob }
-  } catch (error: any) {
-    if (error.code === "P2002") {
+  } catch (error: unknown) {
+    if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
       return { success: false, error: "Job already saved" }
     }
     console.error("Error saving job:", error)

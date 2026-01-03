@@ -1,7 +1,7 @@
 // app/api/scrape/trigger/route.ts
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
-import { YCScraper } from "@/workers/scrapers/yc-scraper"
+import { addYCScrapeJob } from "@/lib/queue"
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,39 +17,27 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { source } = body
 
-    console.log(`🎯 Manual scrape triggered for: ${source}`)
+    console.log(`🎯 Scrape job requested for: ${source}`)
 
-    let result
+    if (source === "yc") {
+      // Add job to queue instead of running directly
+      const job = await addYCScrapeJob(session.user.id)
 
-    switch (source) {
-      case "yc":
-        const ycScraper = new YCScraper()
-        result = await ycScraper.scrape()
-        break
-
-      // Add more scrapers here later
-      // case "wellfound":
-      //   const wellfoundScraper = new WellfoundScraper()
-      //   result = await wellfoundScraper.scrape()
-      //   break
-
-      default:
-        return NextResponse.json(
-          { error: "Invalid source" },
-          { status: 400 }
-        )
+      return NextResponse.json({
+        success: true,
+        message: `Scraping job queued for ${source}`,
+        jobId: job.id,
+      })
     }
 
-    return NextResponse.json({
-      success: result.success,
-      message: `Scraped ${result.jobsScraped} jobs from ${source}`,
-      jobsScraped: result.jobsScraped,
-      errors: result.errors,
-    })
+    return NextResponse.json(
+      { error: "Invalid source" },
+      { status: 400 }
+    )
   } catch (error: any) {
     console.error("Scrape trigger error:", error)
     return NextResponse.json(
-      { error: error.message || "Failed to trigger scrape" },
+      { error: error.message || "Failed to queue scrape job" },
       { status: 500 }
     )
   }

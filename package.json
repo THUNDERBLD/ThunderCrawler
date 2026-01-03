@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate",
+    "worker": "bun workers/queue-worker.ts",
+    "worker:dev": "bun --watch workers/queue-worker.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
