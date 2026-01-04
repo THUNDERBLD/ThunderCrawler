@@ -119,3 +119,40 @@ export type UpdateResumeInput = z.infer<typeof updateResumeSchema>
 export type UpdateUserInput = z.infer<typeof updateUserSchema>
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
 export type ScraperConfigInput = z.infer<typeof scraperConfigSchema>
+
+
+export function validateResumeFile(
+  file: File,
+  maxSizeMB: number = 5
+): { valid: boolean; error?: string } {
+  const allowedTypes = [
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/msword",
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    return {
+      valid: false,
+      error: "Please upload a PDF or DOCX file",
+    };
+  }
+
+  const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+  if (file.size > maxSizeBytes) {
+    return {
+      valid: false,
+      error: `File size must be less than ${maxSizeMB}MB`,
+    };
+  }
+
+  if (!file.name || file.name.length < 3) {
+    return {
+      valid: false,
+      error: "Invalid file name",
+    };
+  }
+
+  return { valid: true };
+}

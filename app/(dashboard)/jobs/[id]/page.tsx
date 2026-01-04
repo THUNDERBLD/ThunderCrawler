@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation"
 import { getJobById } from "@/actions/job.actions"
 import { getJobUserStatus } from "@/actions/application.actions"
+import { JobAIAnalysis } from "@/components/dashboard/job-ai-analysis"
 import { requireAuth } from "@/lib/auth-helpers"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -132,6 +133,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
           </div>
         </CardContent>
       </Card>
+
+      <JobAIAnalysis jobDescription={job.description} />
 
       {/* Application Status (if applied) */}
       {userStatus.application && (

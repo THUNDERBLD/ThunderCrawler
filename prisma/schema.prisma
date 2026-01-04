@@ -114,6 +114,9 @@ model Resume {
   isBase    Boolean  @default(false) // Is this the base resume?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  fileUrl    String?  // Original uploaded file (S3/Vercel Blob)
+  fileType   String?  // 'pdf', 'docx', 'latex'
+  parsedData Json?    // Structured resume data for AI
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   applications Application[]

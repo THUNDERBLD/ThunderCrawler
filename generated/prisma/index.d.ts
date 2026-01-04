@@ -6310,6 +6310,8 @@ export namespace Prisma {
     isBase: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    fileUrl: string | null
+    fileType: string | null
   }
 
   export type ResumeMaxAggregateOutputType = {
@@ -6320,6 +6322,8 @@ export namespace Prisma {
     isBase: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    fileUrl: string | null
+    fileType: string | null
   }
 
   export type ResumeCountAggregateOutputType = {
@@ -6330,6 +6334,9 @@ export namespace Prisma {
     isBase: number
     createdAt: number
     updatedAt: number
+    fileUrl: number
+    fileType: number
+    parsedData: number
     _all: number
   }
 
@@ -6342,6 +6349,8 @@ export namespace Prisma {
     isBase?: true
     createdAt?: true
     updatedAt?: true
+    fileUrl?: true
+    fileType?: true
   }
 
   export type ResumeMaxAggregateInputType = {
@@ -6352,6 +6361,8 @@ export namespace Prisma {
     isBase?: true
     createdAt?: true
     updatedAt?: true
+    fileUrl?: true
+    fileType?: true
   }
 
   export type ResumeCountAggregateInputType = {
@@ -6362,6 +6373,9 @@ export namespace Prisma {
     isBase?: true
     createdAt?: true
     updatedAt?: true
+    fileUrl?: true
+    fileType?: true
+    parsedData?: true
     _all?: true
   }
 
@@ -6445,6 +6459,9 @@ export namespace Prisma {
     isBase: boolean
     createdAt: Date
     updatedAt: Date
+    fileUrl: string | null
+    fileType: string | null
+    parsedData: JsonValue | null
     _count: ResumeCountAggregateOutputType | null
     _min: ResumeMinAggregateOutputType | null
     _max: ResumeMaxAggregateOutputType | null
@@ -6472,6 +6489,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    parsedData?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     applications?: boolean | Resume$applicationsArgs<ExtArgs>
     _count?: boolean | ResumeCountOutputTypeDefaultArgs<ExtArgs>
@@ -6485,6 +6505,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    parsedData?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["resume"]>
 
@@ -6496,6 +6519,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    parsedData?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["resume"]>
 
@@ -6507,9 +6533,12 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    parsedData?: boolean
   }
 
-  export type ResumeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "content" | "isBase" | "createdAt" | "updatedAt", ExtArgs["result"]["resume"]>
+  export type ResumeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "content" | "isBase" | "createdAt" | "updatedAt" | "fileUrl" | "fileType" | "parsedData", ExtArgs["result"]["resume"]>
   export type ResumeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     applications?: boolean | Resume$applicationsArgs<ExtArgs>
@@ -6536,6 +6565,9 @@ export namespace Prisma {
       isBase: boolean
       createdAt: Date
       updatedAt: Date
+      fileUrl: string | null
+      fileType: string | null
+      parsedData: Prisma.JsonValue | null
     }, ExtArgs["result"]["resume"]>
     composites: {}
   }
@@ -6968,6 +7000,9 @@ export namespace Prisma {
     readonly isBase: FieldRef<"Resume", 'Boolean'>
     readonly createdAt: FieldRef<"Resume", 'DateTime'>
     readonly updatedAt: FieldRef<"Resume", 'DateTime'>
+    readonly fileUrl: FieldRef<"Resume", 'String'>
+    readonly fileType: FieldRef<"Resume", 'String'>
+    readonly parsedData: FieldRef<"Resume", 'Json'>
   }
     
 
@@ -10685,7 +10720,10 @@ export namespace Prisma {
     content: 'content',
     isBase: 'isBase',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    fileUrl: 'fileUrl',
+    fileType: 'fileType',
+    parsedData: 'parsedData'
   };
 
   export type ResumeScalarFieldEnum = (typeof ResumeScalarFieldEnum)[keyof typeof ResumeScalarFieldEnum]
@@ -10736,6 +10774,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -10750,6 +10796,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -10789,6 +10844,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -11165,6 +11234,9 @@ export namespace Prisma {
     isBase?: BoolFilter<"Resume"> | boolean
     createdAt?: DateTimeFilter<"Resume"> | Date | string
     updatedAt?: DateTimeFilter<"Resume"> | Date | string
+    fileUrl?: StringNullableFilter<"Resume"> | string | null
+    fileType?: StringNullableFilter<"Resume"> | string | null
+    parsedData?: JsonNullableFilter<"Resume">
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     applications?: ApplicationListRelationFilter
   }
@@ -11177,6 +11249,9 @@ export namespace Prisma {
     isBase?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    fileUrl?: SortOrderInput | SortOrder
+    fileType?: SortOrderInput | SortOrder
+    parsedData?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     applications?: ApplicationOrderByRelationAggregateInput
   }
@@ -11192,6 +11267,9 @@ export namespace Prisma {
     isBase?: BoolFilter<"Resume"> | boolean
     createdAt?: DateTimeFilter<"Resume"> | Date | string
     updatedAt?: DateTimeFilter<"Resume"> | Date | string
+    fileUrl?: StringNullableFilter<"Resume"> | string | null
+    fileType?: StringNullableFilter<"Resume"> | string | null
+    parsedData?: JsonNullableFilter<"Resume">
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     applications?: ApplicationListRelationFilter
   }, "id">
@@ -11204,6 +11282,9 @@ export namespace Prisma {
     isBase?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    fileUrl?: SortOrderInput | SortOrder
+    fileType?: SortOrderInput | SortOrder
+    parsedData?: SortOrderInput | SortOrder
     _count?: ResumeCountOrderByAggregateInput
     _max?: ResumeMaxOrderByAggregateInput
     _min?: ResumeMinOrderByAggregateInput
@@ -11220,6 +11301,9 @@ export namespace Prisma {
     isBase?: BoolWithAggregatesFilter<"Resume"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Resume"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Resume"> | Date | string
+    fileUrl?: StringNullableWithAggregatesFilter<"Resume"> | string | null
+    fileType?: StringNullableWithAggregatesFilter<"Resume"> | string | null
+    parsedData?: JsonNullableWithAggregatesFilter<"Resume">
   }
 
   export type AccountWhereInput = {
@@ -11781,6 +11865,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    fileUrl?: string | null
+    fileType?: string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     user: UserCreateNestedOneWithoutResumesInput
     applications?: ApplicationCreateNestedManyWithoutResumeInput
   }
@@ -11793,6 +11880,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    fileUrl?: string | null
+    fileType?: string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     applications?: ApplicationUncheckedCreateNestedManyWithoutResumeInput
   }
 
@@ -11803,6 +11893,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     user?: UserUpdateOneRequiredWithoutResumesNestedInput
     applications?: ApplicationUpdateManyWithoutResumeNestedInput
   }
@@ -11815,6 +11908,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     applications?: ApplicationUncheckedUpdateManyWithoutResumeNestedInput
   }
 
@@ -11826,6 +11922,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    fileUrl?: string | null
+    fileType?: string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ResumeUpdateManyMutationInput = {
@@ -11835,6 +11934,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ResumeUncheckedUpdateManyInput = {
@@ -11845,6 +11947,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type AccountCreateInput = {
@@ -12402,6 +12507,29 @@ export namespace Prisma {
     jobId?: SortOrder
     createdAt?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type ResumeCountOrderByAggregateInput = {
     id?: SortOrder
@@ -12411,6 +12539,9 @@ export namespace Prisma {
     isBase?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    parsedData?: SortOrder
   }
 
   export type ResumeMaxOrderByAggregateInput = {
@@ -12421,6 +12552,8 @@ export namespace Prisma {
     isBase?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
   }
 
   export type ResumeMinOrderByAggregateInput = {
@@ -12431,6 +12564,34 @@ export namespace Prisma {
     isBase?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -13195,6 +13356,29 @@ export namespace Prisma {
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
@@ -13284,6 +13468,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    fileUrl?: string | null
+    fileType?: string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     applications?: ApplicationCreateNestedManyWithoutResumeInput
   }
 
@@ -13294,6 +13481,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    fileUrl?: string | null
+    fileType?: string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     applications?: ApplicationUncheckedCreateNestedManyWithoutResumeInput
   }
 
@@ -13451,6 +13641,9 @@ export namespace Prisma {
     isBase?: BoolFilter<"Resume"> | boolean
     createdAt?: DateTimeFilter<"Resume"> | Date | string
     updatedAt?: DateTimeFilter<"Resume"> | Date | string
+    fileUrl?: StringNullableFilter<"Resume"> | string | null
+    fileType?: StringNullableFilter<"Resume"> | string | null
+    parsedData?: JsonNullableFilter<"Resume">
   }
 
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
@@ -13686,6 +13879,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    fileUrl?: string | null
+    fileType?: string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     user: UserCreateNestedOneWithoutResumesInput
   }
 
@@ -13697,6 +13893,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    fileUrl?: string | null
+    fileType?: string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ResumeCreateOrConnectWithoutApplicationsInput = {
@@ -13814,6 +14013,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     user?: UserUpdateOneRequiredWithoutResumesNestedInput
   }
 
@@ -13825,6 +14027,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserCreateWithoutSavedJobsInput = {
@@ -14299,6 +14504,9 @@ export namespace Prisma {
     isBase?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    fileUrl?: string | null
+    fileType?: string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type AccountCreateManyUserInput = {
@@ -14379,6 +14587,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     applications?: ApplicationUpdateManyWithoutResumeNestedInput
   }
 
@@ -14389,6 +14600,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
     applications?: ApplicationUncheckedUpdateManyWithoutResumeNestedInput
   }
 
@@ -14399,6 +14613,9 @@ export namespace Prisma {
     isBase?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileType?: NullableStringFieldUpdateOperationsInput | string | null
+    parsedData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type AccountUpdateWithoutUserInput = {

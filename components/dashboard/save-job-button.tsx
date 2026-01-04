@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Bookmark } from "lucide-react"
 import { saveJob, unsaveJob } from "@/actions/application.actions"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface SaveJobButtonProps {
   jobId: string
@@ -27,10 +28,12 @@ export function SaveJobButton({ jobId, initialIsSaved }: SaveJobButtonProps) {
         setIsSaved(!isSaved)
         router.refresh()
       } else {
-        alert(result.error)
+        toast.success("Job saved successfully")
+        toast.error(result.error || "Failed to save job")
       }
     } catch (error) {
       alert("Something went wrong")
+      console.error("Error toggling save job:", error)
     } finally {
       setIsLoading(false)
     }
