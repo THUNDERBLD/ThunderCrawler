@@ -12,43 +12,40 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
  */
 export async function analyzeJobDescription(jobDescription: string) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+    // 1. UPDATED MODEL NAME & ADDED JSON CONFIG
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-2.5-flash",
+      generationConfig: { responseMimeType: "application/json" } 
+    })
 
     const prompt = `
-Analyze this job description and provide:
-1. Key required skills (list 5-8 most important)
-2. Experience level required
-3. Main responsibilities (top 3)
-4. Red flags or concerns (if any)
-5. Company culture indicators
+    Analyze this job description and provide the output in strict JSON format.
+    
+    Job Description:
+    ${jobDescription}
 
-Job Description:
-${jobDescription}
-
-Respond in JSON format:
-{
-  "skills": ["skill1", "skill2", ...],
-  "experienceLevel": "junior|mid|senior",
-  "responsibilities": ["resp1", "resp2", "resp3"],
-  "redFlags": ["flag1", ...] or [],
-  "cultureIndicators": ["indicator1", ...]
-}
-`
+    Output Schema:
+    {
+      "skills": ["skill1", "skill2", ...],
+      "experienceLevel": "junior|mid|senior",
+      "responsibilities": ["resp1", "resp2", "resp3"],
+      "redFlags": ["flag1", ...] or [],
+      "cultureIndicators": ["indicator1", ...]
+    }
+    `
 
     const result = await model.generateContent(prompt)
     const response = await result.response
     const text = response.text()
     
-    // Extract JSON from response
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) {
-      throw new Error("Failed to parse AI response")
-    }
+    // 2. SIMPLIFIED PARSING (No regex needed with JSON mode)
+    // If the model is forced to return JSON, we can often parse directly.
+    // However, sometimes it might still return whitespace, so trimming is safe.
+    return JSON.parse(text.trim())
 
-    return JSON.parse(jsonMatch[0])
   } catch (error) {
     console.error("Gemini API error:", error)
-    throw error
+    throw error // This bubbles up to your route handler
   }
 }
 
@@ -60,59 +57,49 @@ export async function getResumeSuggestions(
   jobDescription: string
 ) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+    // UPDATED MODEL HERE TOO
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-2.5-flash",
+      generationConfig: { responseMimeType: "application/json" }
+    })
 
     const prompt = `
-Compare this resume with the job description and provide optimization suggestions.
+    Compare this resume with the job description.
+    
+    Resume:
+    ${resume}
 
-Resume:
-${resume}
+    Job Description:
+    ${jobDescription}
 
-Job Description:
-${jobDescription}
-
-Provide:
-1. Missing keywords that should be added
-2. Skills to highlight more prominently
-3. Specific improvements for each section
-4. ATS compatibility score (0-100)
-5. Overall match score (0-100)
-
-Respond in JSON format:
-{
-  "missingKeywords": ["keyword1", "keyword2", ...],
-  "skillsToHighlight": ["skill1", "skill2", ...],
-  "improvements": {
-    "summary": "suggestion for summary section",
-    "experience": "suggestion for experience section",
-    "skills": "suggestion for skills section"
-  },
-  "atsScore": 85,
-  "matchScore": 75,
-  "summary": "Brief overall assessment"
-}
-`
+    Output Schema:
+    {
+      "missingKeywords": ["keyword1", "keyword2", ...],
+      "skillsToHighlight": ["skill1", "skill2", ...],
+      "improvements": {
+        "summary": "suggestion for summary section",
+        "experience": "suggestion for experience section",
+        "skills": "suggestion for skills section"
+      },
+      "atsScore": 85,
+      "matchScore": 75,
+      "summary": "Brief overall assessment"
+    }
+    `
 
     const result = await model.generateContent(prompt)
     const response = await result.response
     const text = response.text()
     
-    // Extract JSON from response
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) {
-      throw new Error("Failed to parse AI response")
-    }
+    return JSON.parse(text.trim())
 
-    return JSON.parse(jsonMatch[0])
   } catch (error) {
     console.error("Gemini API error:", error)
     throw error
   }
 }
 
-/**
- * Calculate keyword match between resume and job
- */
+// ... calculateKeywordMatch remains the same ...
 export function calculateKeywordMatch(
   resume: string,
   jobDescription: string
@@ -121,14 +108,19 @@ export function calculateKeywordMatch(
   matchedKeywords: string[]
   missingKeywords: string[]
 } {
-  // Simple keyword extraction (you can enhance this)
+  // Simple keyword extraction
   const extractKeywords = (text: string): string[] => {
+    // Basic regex to find words with 3+ letters
     const technicalTerms = text
       .toLowerCase()
       .match(/\b[a-z]{3,}\b/g) || []
     
-    // Filter common words
-    const commonWords = new Set(['the', 'and', 'for', 'with', 'that', 'this', 'from', 'have', 'will', 'are', 'was', 'been'])
+    // Filter common words (stopwords)
+    const commonWords = new Set([
+      'the', 'and', 'for', 'with', 'that', 'this', 'from', 
+      'have', 'will', 'are', 'was', 'been', 'can', 'has', 
+      'but', 'not', 'you', 'all', 'any', 'jobs', 'work'
+    ])
     
     return [...new Set(technicalTerms)].filter(word => !commonWords.has(word))
   }

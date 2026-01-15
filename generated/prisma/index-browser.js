@@ -128,7 +128,11 @@ exports.Prisma.UserScalarFieldEnum = {
   image: 'image',
   emailVerified: 'emailVerified',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  role: 'role',
+  subscription: 'subscription',
+  dailyResumeBuilds: 'dailyResumeBuilds',
+  lastQuotaReset: 'lastQuotaReset'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -210,6 +214,19 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   expires: 'expires'
 };
 
+exports.Prisma.ApiKeyScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  provider: 'provider',
+  encryptedKey: 'encryptedKey',
+  name: 'name',
+  isActive: 'isActive',
+  usageCount: 'usageCount',
+  lastUsed: 'lastUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -245,7 +262,8 @@ exports.Prisma.ModelName = {
   Resume: 'Resume',
   Account: 'Account',
   Session: 'Session',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  ApiKey: 'ApiKey'
 };
 
 /**
