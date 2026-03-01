@@ -3,6 +3,7 @@ import { requireAuth } from "@/lib/auth-helpers"
 import { getUserResumes } from "@/actions/resume.actions"
 import ResumeUpload from "@/components/dashboard/resume-upload"
 import { ResumeList } from "@/components/dashboard/resume-list"
+import { ATSChecker } from "@/components/dashboard/ats-checker"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Info } from "lucide-react"
 
@@ -14,8 +15,12 @@ export default async function ResumePage() {
   await requireAuth()
   const result = await getUserResumes()
 
+  // Check if user has a base resume
+  const hasBaseResume = result.resumes?.some((r) => r.isBase)
+
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Resume Management</h1>
@@ -26,6 +31,7 @@ export default async function ResumePage() {
         <ResumeUpload />
       </div>
 
+      {/* Info Alert */}
       <Alert>
         <Info className="h-4 w-4" />
         <AlertDescription>
@@ -34,8 +40,24 @@ export default async function ResumePage() {
         </AlertDescription>
       </Alert>
 
+      {/* ATS Score Checker */}
+      {hasBaseResume ? (
+        <ATSChecker />
+      ) : (
+        <Alert variant="default" className="bg-blue-50 border-blue-200">
+          <Info className="h-4 w-4 text-blue-600" />
+          <AlertDescription className="text-blue-800">
+            Upload and set a base resume to use the ATS Score Checker
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Resume List */}
       {result.success ? (
-        <ResumeList resumes={result.resumes} />
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Your Resumes</h2>
+          <ResumeList resumes={result.resumes} />
+        </div>
       ) : (
         <Alert variant="destructive">
           <AlertDescription>{result.error}</AlertDescription>
