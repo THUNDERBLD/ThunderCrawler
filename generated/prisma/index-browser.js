@@ -128,7 +128,11 @@ exports.Prisma.UserScalarFieldEnum = {
   image: 'image',
   emailVerified: 'emailVerified',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  role: 'role',
+  subscription: 'subscription',
+  dailyResumeBuilds: 'dailyResumeBuilds',
+  lastQuotaReset: 'lastQuotaReset'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -176,7 +180,10 @@ exports.Prisma.ResumeScalarFieldEnum = {
   content: 'content',
   isBase: 'isBase',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  fileUrl: 'fileUrl',
+  fileType: 'fileType',
+  parsedData: 'parsedData'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -207,9 +214,27 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   expires: 'expires'
 };
 
+exports.Prisma.ApiKeyScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  provider: 'provider',
+  encryptedKey: 'encryptedKey',
+  name: 'name',
+  isActive: 'isActive',
+  usageCount: 'usageCount',
+  lastUsed: 'lastUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -222,6 +247,12 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -231,7 +262,8 @@ exports.Prisma.ModelName = {
   Resume: 'Resume',
   Account: 'Account',
   Session: 'Session',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  ApiKey: 'ApiKey'
 };
 
 /**

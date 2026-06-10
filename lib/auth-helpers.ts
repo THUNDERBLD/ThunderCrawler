@@ -30,3 +30,12 @@ export async function requireGuest() {
     redirect("/dashboard")
   }
 }
+
+// Uncomment it if u are working on admin features
+// export async function requireAdmin() {
+//   const user = await requireAuth()
+//   if (user.role !== "ADMIN") {
+//     redirect("/dashboard")
+//   }
+//   return user
+// }

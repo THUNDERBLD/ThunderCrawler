@@ -21,6 +21,14 @@ model User {
   createdAt     DateTime  @default(now())      // @default(now()) → auto insert timestamp when created
   updatedAt     DateTime  @updatedAt          //  @updatedAt → Prisma auto-updates on every update
 
+  // NEW FIELDS for settings and quotas
+  role          String    @default("USER")    // 'USER', 'ADMIN', 'SUPER_ADMIN'
+  subscription  String    @default("FREE")   // 'FREE', 'PRO', 'ENTERPRISE'
+  
+  // Daily quotas (reset daily)
+  dailyResumeBuilds   Int      @default(0)
+  lastQuotaReset      DateTime @default(now())
+
   // Relations    // This does NOT create columns. Just for relations between tables.   
   // This tells Prisma: A user can have many applications, saved jobs, and resumes.
   applications Application[]
@@ -28,6 +36,7 @@ model User {
   resumes      Resume[]
   accounts     Account[]      
   sessions     Session[]      
+  apiKeys      ApiKey[]        // NEW: User's API keys
 
   // Table name override 
   // Without this: table name would be "User" (Prisma uses model name as table name by default)
@@ -114,6 +123,9 @@ model Resume {
   isBase    Boolean  @default(false) // Is this the base resume?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  fileUrl    String?  // Original uploaded file (S3/Vercel Blob)
+  fileType   String?  // 'pdf', 'docx', 'latex'
+  parsedData Json?    // Structured resume data for AI
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   applications Application[]
@@ -159,4 +171,26 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model ApiKey {
+  id             String   @id @default(cuid())
+  userId         String
+  provider       String   // 'GEMINI', 'OPENAI' (future)
+  encryptedKey   String   @db.Text  // Encrypted API key
+  name           String   // User-friendly name like "My Gemini Key"
+  isActive       Boolean  @default(true)
+  
+  // Usage tracking
+  usageCount     Int      @default(0)
+  lastUsed       DateTime?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([provider])
+  @@map("api_keys")
 }
